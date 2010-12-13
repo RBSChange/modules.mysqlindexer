@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.mysqlindexer.bo.general" lcid="en_GB">
+  <key id="module-name">mysql indexer</key>
+  <key id="tree-root-name">mysql indexer</key>
+  <key id="system-folder-name">mysql indexer</key>
+</i18n>
