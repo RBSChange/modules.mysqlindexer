@@ -3,13 +3,13 @@
  * mysqlindexer_UpdateAction
  * @package modules.mysqlindexer.actions
  */
-class mysqlindexer_updateAction extends f_action_BaseAction
+class mysqlindexer_updateAction extends change_Action
 {
 	/**
 		/update  <delete><query>client:inthause.dev301</query></delete>
 		/update  <commit/>
-	 * @param Context $context
-	 * @param Request $request
+	 * @param change_Context $context
+	 * @param change_Request $request
 	 */
 	public function _execute($context, $request)
 	{

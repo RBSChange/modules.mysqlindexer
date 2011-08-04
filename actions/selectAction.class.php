@@ -3,11 +3,11 @@
  * mysqlindexer_SelectAction
  * @package modules.mysqlindexer.actions
  */
-class mysqlindexer_selectAction extends f_action_BaseAction
+class mysqlindexer_selectAction extends change_Action
 {
 	/**
-	 * @param Context $context
-	 * @param Request $request
+	 * @param change_Context $context
+	 * @param change_Request $request
 	 */
 	public function _execute($context, $request)
 	{
