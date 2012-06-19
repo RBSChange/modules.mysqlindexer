@@ -1,25 +1,10 @@
 <?php
+/**
+ * @package modules.mysqlindexer
+ * @method mysqlindexer_IndexService getInstance()
+ */
 class mysqlindexer_IndexService extends indexer_IndexService
 {
-
-	/**
-	 * @var mysqlindexer_IndexService
-	 */
-	private static $instance = null;
-	
-	/**
-	 * @return mysqlindexer_IndexService
-	 */
-	public static function getInstance()
-	{
-		if (null === self::$instance)
-		{
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
-	
-
 	public function clearIndex()
 	{
 		$this->clearDb();
@@ -65,7 +50,7 @@ class mysqlindexer_IndexService extends indexer_IndexService
 	 * (search on label and full text with a boost on the label). 
 	 * 
 	 * @param indexer_Query $query
-	 * @param String[] $suggestionTerms
+	 * @param string[] $suggestionTerms
 	 * @return indexer_SolrSearchResults
 	 */
 	public function search(indexer_Query $query, $suggestionTerms = null)
@@ -88,8 +73,8 @@ class mysqlindexer_IndexService extends indexer_IndexService
 		$sql = "SELECT count(`final_id`) AS `nbrows`, MAX($score) AS `maxscore` FROM `m_mysqlindexer_index` WHERE " . implode(' AND ', $where) . "";
 		foreach ($con->query($sql, PDO::FETCH_ASSOC) as $row) 
 		{
-	       $rowCount = $row['nbrows'];
-	       $maxScore = $row['maxscore'];
+		   $rowCount = $row['nbrows'];
+		   $maxScore = $row['maxscore'];
 		}
 
 		
@@ -117,7 +102,7 @@ class mysqlindexer_IndexService extends indexer_IndexService
 		$result = array();		
 		foreach ($con->query($sql, PDO::FETCH_ASSOC) as $row) 
 		{
-	       $result[] =  $this->highlightWords($row, $words);
+		   $result[] =  $this->highlightWords($row, $words);
 		}
 		
 		$searchResults = new mysqlindexer_SearchResults($result, $rowCount, $maxScore, $query->getFirstHitOffset(), $query->getReturnedHitsCount());
@@ -215,8 +200,8 @@ class mysqlindexer_IndexService extends indexer_IndexService
 		$sql = "SELECT count(`final_id`) AS `nbrows`, MAX($score) AS `maxscore` FROM `m_mysqlindexer_index` WHERE " . implode(' AND ', $where) . "";
 		foreach ($con->query($sql, PDO::FETCH_ASSOC) as $row) 
 		{
-	       $rowCount = $row['nbrows'];
-	       $maxScore = $row['maxscore'];
+		   $rowCount = $row['nbrows'];
+		   $maxScore = $row['maxscore'];
 		}
 
 		$orders = array();
@@ -253,7 +238,7 @@ class mysqlindexer_IndexService extends indexer_IndexService
 		$result = array();		
 		foreach ($con->query($sql, PDO::FETCH_ASSOC) as $row) 
 		{
-	       $result[] =  $this->highlightWords($row, $words);
+		   $result[] =  $this->highlightWords($row, $words);
 		}
 		
 		$searchResults = new mysqlindexer_SearchResults($result, $rowCount, $maxScore, $query->getFirstHitOffset(), $query->getReturnedHitsCount());
@@ -263,9 +248,9 @@ class mysqlindexer_IndexService extends indexer_IndexService
 	/**
 	 * Get an array of at most $count suggestions for the word $word from the spellchecker for $lang. 
 	 *
-	 * @param String $word
-	 * @param String $lang
-	 * @param String $count
+	 * @param string $word
+	 * @param string $lang
+	 * @param string $count
 	 * @return Array<String>
 	 */
 	public function getSuggestionArrayForWord($word, $lang = null, $count = null)
@@ -558,93 +543,93 @@ class mysqlindexer_IndexService extends indexer_IndexService
 	{
 		$string = $row['label'];
 		$descr =  $row['text'];
-        foreach ($words as $word)
-        {
-                $word = preg_quote(str_replace('*', '', $word));
-                $string = preg_replace("/($word)/i", '<em>\1</em>', $string);
-                $descr = preg_replace("/($word)/i", '<em>\1</em>', $descr);
-        }
-       	if (strpos($string, '<em>') !== false)
-       	{
-        	$row['hl_label'] = $string;
-       	}
-       	
-	    if (($pos = strpos($descr, '<em>')) !== false)
-       	{
-       		$inword = false;
-       		$start = $pos;
-       		$word = 20;
-       		$lastWord = $start;
-       		while ($start > 0 && $word > 0)
-       		{
-       			switch ($descr[$start]) 
-       			{
-       				case ' ':
-       				case ',':
-       			       	if ($inword)
-       					{
-       						$lastWord = $start + 1;
-       						$inword = false;
-       						$word = $word -1;
-       					}       					    					
-       				case '.':
-       				case '?':
-       				case '!':
-       				case ':':
-       			       	if ($inword)
-       					{
-       						$lastWord = $start + 1;
-       						$inword = false;
-       						$word = 0;
-       					} 
-       					break;
-       				default:
-       					$inword = true;	
-       					break;
-       			}
-       			$start = $start -1;
-       		}
-       		$start = ($word <= 0) ? $lastWord : 0;
+		foreach ($words as $word)
+		{
+				$word = preg_quote(str_replace('*', '', $word));
+				$string = preg_replace("/($word)/i", '<em>\1</em>', $string);
+				$descr = preg_replace("/($word)/i", '<em>\1</em>', $descr);
+		}
+	   	if (strpos($string, '<em>') !== false)
+	   	{
+			$row['hl_label'] = $string;
+	   	}
+	   	
+		if (($pos = strpos($descr, '<em>')) !== false)
+	   	{
+	   		$inword = false;
+	   		$start = $pos;
+	   		$word = 20;
+	   		$lastWord = $start;
+	   		while ($start > 0 && $word > 0)
+	   		{
+	   			switch ($descr[$start]) 
+	   			{
+	   				case ' ':
+	   				case ',':
+	   				   	if ($inword)
+	   					{
+	   						$lastWord = $start + 1;
+	   						$inword = false;
+	   						$word = $word -1;
+	   					}	   											
+	   				case '.':
+	   				case '?':
+	   				case '!':
+	   				case ':':
+	   				   	if ($inword)
+	   					{
+	   						$lastWord = $start + 1;
+	   						$inword = false;
+	   						$word = 0;
+	   					} 
+	   					break;
+	   				default:
+	   					$inword = true;	
+	   					break;
+	   			}
+	   			$start = $start -1;
+	   		}
+	   		$start = ($word <= 0) ? $lastWord : 0;
 
-       		$word = 20;
-       		$end = $pos;
-       		$lastWord = $end;
-       		$nbChar = strlen($descr);
-       		$inword = false;
-       		
-       		while ($end < $nbChar && $word > 0)
-       		{
-       			switch ($descr[$end]) 
-       			{
-       				case ' ':
-       				case ',':
-       			       	if ($inword)
-       					{
-       						$lastWord = $end;
-       						$inword = false;
-       						$word = $word -1;
-       					}       					    					
-       				case '.':
-       				case '?':
-       				case '!':
-       				case ':':
-       			       	if ($inword)
-       					{
-       						$lastWord = $end;
-       						$inword = false;
-       						$word = 0;
-       					} 
-       					break;
-       				default:
-       					$inword = true;	
-       					break;
-       			}
-       			$end = $end +1;
-       		}
-       		$end = ($word == 0) ? $lastWord : $nbChar;       		
-        	$row['hl_text'] = substr($descr, $start, ($end - $start));
-       	}
-       	return $row;
+	   		$word = 20;
+	   		$end = $pos;
+	   		$lastWord = $end;
+	   		$nbChar = strlen($descr);
+	   		$inword = false;
+	   		
+	   		while ($end < $nbChar && $word > 0)
+	   		{
+	   			switch ($descr[$end]) 
+	   			{
+	   				case ' ':
+	   				case ',':
+	   				   	if ($inword)
+	   					{
+	   						$lastWord = $end;
+	   						$inword = false;
+	   						$word = $word -1;
+	   					}	   											
+	   				case '.':
+	   				case '?':
+	   				case '!':
+	   				case ':':
+	   				   	if ($inword)
+	   					{
+	   						$lastWord = $end;
+	   						$inword = false;
+	   						$word = 0;
+	   					} 
+	   					break;
+	   				default:
+	   					$inword = true;	
+	   					break;
+	   			}
+	   			$end = $end +1;
+	   		}
+	   		$end = ($word == 0) ? $lastWord : $nbChar;	   		
+			$row['hl_text'] = substr($descr, $start, ($end - $start));
+	   	}
+	   	return $row;
 	}
 	
 	/**
