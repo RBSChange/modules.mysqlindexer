@@ -1,0 +1,6 @@
+{
+	"name": "rbschange/mysqlindexer",
+	"description": "RBS Change Mysqlindexer module",
+	"type": "rbschange-compatibility-module",
+	"license":"AGPL-3.0"
+}
