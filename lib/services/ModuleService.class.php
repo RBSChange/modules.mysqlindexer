@@ -412,7 +412,7 @@ class mysqlindexer_ModuleService extends ModuleBaseService
 	{
 		$con = $this->getPersistentProvider()->getDriver();
 		$matches = array();
-		$limit = " LIMIT " . $params['start'] . " , " . $params['rows'];
+		$limit = " LIMIT " . intval($params['start']) . " , " . intval($params['rows']);
 		$where = array("`client`=" .$con->quote($client));
 		$words = array();
 		$lang = '';
@@ -460,7 +460,7 @@ class mysqlindexer_ModuleService extends ModuleBaseService
 	{
 		$con = $this->getPersistentProvider()->getDriver();
 		$matches = array();
-		$limit = " LIMIT " . $params['start'] . " , " . $params['rows'];
+		$limit = " LIMIT " . intval($params['start']) . " , " . intval($params['rows']);
 		$where = array("`client`=" .$con->quote($client));
 		$words = array();
 		$lang = '';
